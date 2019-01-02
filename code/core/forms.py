@@ -5,6 +5,8 @@ from bootstrap_modal_forms.mixins import PopRequestMixin
 
 class ClienteForm(forms.ModelForm):
 
+    estado = forms.ChoiceField(label='Estado',choices=UF_CHOICES, widget=forms.Select(attrs={'class':'form-control'}))
+
     class Meta:
         model = Cliente
         fields = '__all__'
@@ -19,7 +21,6 @@ class ClienteForm(forms.ModelForm):
             'numero': forms.NumberInput(attrs={'class':'form-control'}),
             'bairro': forms.TextInput(attrs={'class':'form-control'}),
             'cidade': forms.TextInput(attrs={'class':'form-control'}),
-            'estado': forms.TextInput(attrs={'class':'form-control'}),
         }
 
 class ProdutoForm(PopRequestMixin,forms.ModelForm):

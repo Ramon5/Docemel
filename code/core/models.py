@@ -1,5 +1,40 @@
 from django.db import models
 
+UF_CHOICES = (
+    ('AC', 'Acre'),
+    ('AL', 'Alagoas'),
+    ('AP', 'Amapá'),
+    ('BA', 'Bahia'),
+    ('CE', 'Ceará'),
+    ('DF', 'Distrito Federal'),
+    ('ES', 'Espírito Santo'),
+    ('GO', 'Goiás'),
+    ('MA', 'Maranhão'),
+    ('MG', 'Minas Gerais'),
+    ('MS', 'Mato Grosso do Sul'),
+    ('MT', 'Mato Grosso'),
+    ('PA', 'Pará'),
+    ('PB', 'Paraíba'),
+    ('PE', 'Pernanbuco'),
+    ('PI', 'Piauí'),
+    ('PR', 'Paraná'),
+    ('RJ', 'Rio de Janeiro'),
+    ('RN', 'Rio Grande do Norte'),
+    ('RO', 'Rondônia'),
+    ('RR', 'Roraima'),
+    ('RS', 'Rio Grande do Sul'),
+    ('SC', 'Santa Catarina'),
+    ('SE', 'Sergipe'),
+    ('SP', 'São Paulo'),
+    ('TO', 'Tocantins')
+)
+
+SEXO = (
+    ('masculino','MASCULINO'),
+    ('feminino','FEMININO'),
+)
+
+
 class Cliente(models.Model):
 
     nome = models.CharField('Nome', max_length=130, blank=True, null=True)
@@ -10,7 +45,7 @@ class Cliente(models.Model):
     numero = models.IntegerField('Número')
     bairro = models.CharField('Bairro', max_length=80, blank=True, null=True)
     cidade = models.CharField('Cidade', max_length=40, blank=True, null=True)
-    estado = models.CharField('Estado', max_length=130, blank=True, null=True)
+    estado = models.CharField('Estado', max_length=2, blank=True, null=True, choices=UF_CHOICES)
     telefone = models.CharField('Contato', max_length=20, blank=True, null=True)
 
     @property
@@ -29,7 +64,7 @@ class Fornecedor(models.Model):
     numero = models.IntegerField('Número')
     bairro = models.CharField('Bairro', max_length=80, blank=True, null=True)
     cidade = models.CharField('Cidade', max_length=40, blank=True, null=True)
-    estado = models.CharField('Estado', max_length=130, blank=True, null=True)
+    estado = models.CharField('Estado', max_length=2, blank=True, null=True, choices=UF_CHOICES)
     telefone = models.CharField('Contato', max_length=20, blank=True, null=True)
     email = models.EmailField('E-mail', null=True, blank=True)
 

@@ -111,6 +111,9 @@ class ClienteDelete(DeleteAjaxMixin, SuccessMessageMixin, DeleteView):
     success_url = reverse_lazy('clientes')
     success_message = 'Cliente excluido com sucesso!'
 
+
+## Produtos
+
 class ProdutoList(ListView):
 
     model = Produto
