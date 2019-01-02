@@ -79,6 +79,9 @@ class Fornecedor(models.Model):
 class Produto(models.Model):
 
     nome_produto = models.CharField('Produto', max_length=90, null=True, blank=True)
+    numero_lote = models.CharField('Número do lote',max_length=12,null=True,blank=True)
+    codigo_de_barras = models.CharField('Código de Barras', max_length=12,null=True,blank=True)
+    data_validade = models.DateField('Data de Validade', null=True,blank=True)
     peso = models.IntegerField('Peso')
 
     @property

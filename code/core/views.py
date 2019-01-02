@@ -49,6 +49,8 @@ class RegisterView(TemplateView):
     template_name = 'register.html'
 
 
+## Cliente
+
 class ClienteListView(ListView):
 
     template_name = 'core/clientes.html'
@@ -158,6 +160,8 @@ class ProdutoDelete(DeleteAjaxMixin, SuccessMessageMixin, DeleteView):
     success_url = reverse_lazy('produtos')
     success_message = 'Produto excluido com sucesso!'
 
+
+## Vendas
 
 class VendaList(ListView):
 
