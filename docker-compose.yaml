@@ -1,0 +1,96 @@
+version: '3.1'
+
+services:
+
+  django:
+    build: .
+    restart: always
+    container_name: django-server
+    environment:
+      - DJANGO_SETTINGS_MODULE=docemel.settings_production #change django project name
+    expose:
+      - 8000
+    volumes:
+      - ./code:/code
+    command: >
+      sh -c "python manage.py migrate
+      && python manage.py collectstatic --noinput
+      && gunicorn docemel.wsgi:application -w 3 -b :8000"  #change django project name
+    networks:
+      - web
+      - database
+    depends_on:
+      # - mariadb
+      - postgres
+
+  nginx:
+    image: nginx
+    container_name: nginx-server
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./etc/nginx:/etc/nginx/conf.d/
+      - ./log/nginx:/var/log/nginx
+      - ./code/media:/var/www/media
+      - ./code/static:/var/www/static
+      - ./var/letsencrypt:/var/letsencrypt
+      - /etc/letsencrypt:/etc/letsencrypt # comentar se não for utilizar o letsencrypt
+    networks:
+      - web
+    depends_on:
+      - django
+
+  postgres:
+    image: mdillon/postgis
+    container_name: postgres-server
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: docemeldb
+    expose:
+      - 5432
+    volumes:
+      - ./var/postgresql:/var/lib/postgresql/data
+    networks:
+      - web
+      - database
+
+  redis:
+    image: redis
+    container_name: redis-server
+    expose:
+      - 6379
+    networks:
+      - web
+      - database
+
+  adminer:
+    image: adminer
+    container_name: adminer-server
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      # - mariadb
+      - postgres
+    networks:
+      - database
+
+  portainer:
+    image: portainer/portainer
+    ports:
+      - "9000:9000"
+    command: -H unix:///var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer-data:/data
+
+volumes:
+  # mariadb-data:
+  # postgres-data:
+  portainer-data:
+
+networks: 
+  web:
+  database:
