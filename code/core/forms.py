@@ -32,11 +32,37 @@ class ProdutoForm(PopRequestMixin,forms.ModelForm):
         widgets = {
             'nome_produto': forms.TextInput(attrs={'class':'form-control'}),
             'peso': forms.NumberInput(attrs={'class':'form-control'}),
+            'data_validade': forms.TextInput(attrs={'class': 'form-control', 'type': 'date'}),
         }
 
 
-class VendaForm(PopRequestMixin, forms.ModelForm):
+class EstoqueForm(PopRequestMixin, forms.ModelForm):
 
     class Meta:
-        model = Venda
+        model = Estoque
         fields = '__all__'
+
+        widgets = {
+            'data_entrada': forms.TextInput(attrs={'class':'form-control','type':'date'}),
+        }
+
+
+class FornecedorForm(forms.ModelForm):
+
+    estado = forms.ChoiceField(label='Estado', choices=UF_CHOICES, widget=forms.Select(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = Fornecedor
+        fields = '__all__'
+
+        widgets = {
+            'razao_social': forms.TextInput(attrs={'class': 'form-control'}),
+            'nome_fantasia': forms.TextInput(attrs={'class': 'form-control'}),
+            'cnpj': forms.TextInput(attrs={'class': 'form-control', 'id': 'cnpj', 'placeholder': '__.___.___/____-__'}),
+            'email': forms.TextInput(attrs={'class': 'form-control', 'type': 'email'}),
+            'telefone': forms.TextInput(attrs={'class': 'form-control', 'id': 'telefone', 'placeholder': '( __ ) _  ____-____'}),
+            'rua': forms.TextInput(attrs={'class': 'form-control'}),
+            'numero': forms.NumberInput(attrs={'class': 'form-control'}),
+            'bairro': forms.TextInput(attrs={'class': 'form-control'}),
+            'cidade': forms.TextInput(attrs={'class': 'form-control'}),
+        }

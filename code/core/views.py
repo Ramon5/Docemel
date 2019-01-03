@@ -3,7 +3,7 @@ from django.views.generic.base import TemplateView, View
 from django.views.generic.list import ListView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from core.models import Cliente, Produto, Fornecedor, Venda, Entrada, Estoque
+from core.models import Cliente, Produto, Fornecedor, Venda,Estoque
 from core.forms import *
 from django.views.generic.edit import UpdateView, DeleteView, CreateView
 from django.urls import reverse_lazy
@@ -88,7 +88,7 @@ class ClienteCreate(CreateView, SuccessMessageMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tela'] = 'Novo Cliente'
+        context['tela'] = 'NOVO CLIENTE'
         return context
 
 
@@ -161,27 +161,72 @@ class ProdutoDelete(DeleteAjaxMixin, SuccessMessageMixin, DeleteView):
     success_message = 'Produto excluido com sucesso!'
 
 
-## Vendas
+## Estoque
+class EstoqueList(ListView):
 
-class VendaList(ListView):
-
-    model = Venda
+    model = Estoque
+    template_name = 'core/estoque_list.html'
     paginate_by = 100
-    template_name = 'core/vendas.html'
 
-    def get_queryset(self):
-        return Venda.objects.all().order_by('data_venda')
-
-    def get_context_data(self, *, object_list=None, **kwargs):
+    def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tela'] = 'VENDAS'
+        context['tela'] = 'ESTOQUE'
         return context
 
 
+class EstoqueNovo(CreateView, PassRequestMixin,SuccessMessageMixin):
 
-class VendaCreate(CreateView, SuccessMessageMixin):
+    model = Produto
+    template_name = 'core/entrada_estoque.html'
+    success_url = reverse_lazy('estoque')
+    success_message = 'Produto cadastrado com sucesso'
+    form_class = EstoqueForm
 
-    model = Venda
-    form_class = VendaForm
-    template_name = 'core/venda_create_form.html'
-    success_message = 'Entrada cadastrada com sucesso'
+
+## Fornecedor
+
+class FornecedorList(ListView):
+
+    model = Fornecedor
+    template_name = 'core/fornecedor_list.html'
+    paginate_by = 100
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tela'] = 'FORNECEDORES'
+        return context
+
+class FornecedorCreate(CreateView, SuccessMessageMixin):
+
+    model = Fornecedor
+    template_name_suffix = '_create_form'
+    success_message = 'Fornecedor cadastrado com sucesso!'
+    success_url = reverse_lazy('fornecedores')
+    form_class = FornecedorForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tela'] = 'NOVO FORNECEDOR'
+        return context
+
+
+class FornecedorEdit(UpdateView, SuccessMessageMixin):
+
+    model = Fornecedor
+    template_name_suffix = '_update_form'
+    success_message = 'Fornecedor alterado com sucesso!'
+    form_class = FornecedorForm
+    success_url = reverse_lazy('fornecedores')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tela'] = 'EDIÇÃO DE FORNECEDOR'
+        return context
+
+
+class FornecedorDelete(DeleteAjaxMixin, SuccessMessageMixin, DeleteView):
+
+    model = Fornecedor
+    template_name_suffix = '_check_delete'
+    success_url = reverse_lazy('fornecedores')
+    success_message = 'Fornecedor excluido com sucesso!'

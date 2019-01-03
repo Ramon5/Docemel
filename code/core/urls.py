@@ -23,5 +23,15 @@ urlpatterns = [
     path('produto_edit/<int:pk>/',views.ProdutoEdit.as_view(),name='produto_edit'),
     path('produto_delete/<int:pk>/',views.ProdutoDelete.as_view(),name='produto_delete'),
 
+    # estoque
+    path('estoque/', views.EstoqueList.as_view(), name='estoque'),
+    path('estoque_create/', views.EstoqueNovo.as_view(), name='entrada_create'),
+
+    # fornecedores
+    path('fornecedores/',views.FornecedorList.as_view(), name='fornecedores'),
+    path('fornecedor_create/',views.FornecedorCreate.as_view(),name='fornecedor_create'),
+    path('fornecedor_edit/<int:pk>/',views.FornecedorEdit.as_view(),name='fornecedor_edit'),
+    path('fornecedor_delete/<int:pk>/',views.FornecedorDelete.as_view(),name='fornecedor_delete'),
+
 
 ]

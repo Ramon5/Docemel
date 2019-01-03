@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block content-main %}
+<div class="row">
+    <div class="col">
+        <div class="card shadow">
+            <div class="card-header border-0">
+                <div class="row">
+                    <div class="col-2">
+                        <i class="ni ni-single-02 text-primary"></i>
+                    </div>
+                    <div class="col-10" style="text-align:right;">
+                        <button class="btn btn-primary" onclick="history.go(-1);">Voltar
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="container">
+                    <h6 class="text-muted">Dados</h6>
+                    <p></p>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <label class="label">Razão Social</label><br>
+                            {{ form.razao_social }}
+                        </div>
+                        <div class="col-md-5">
+                            <label>Nome Fantasia</label><br>
+                            {{ form.nome_fantasia }}
+                        </div>
+                    </div>
+                    <p></p>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label class="label">CNPJ</label><br>
+                            {{ form.cnpj }}
+                        </div>
+
+                    </div>
+                    <p></p>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="label">E-mail</label><br>
+                            {{ form.email }}
+                        </div>
+                        <div class="col-md-3">
+                            <label>Contato</label><br>
+                            {{ form.telefone }}
+                        </div>
+                    </div>
+                    <p></p>
+                    <hr>
+                    <h6 class="text-muted">Endereço</h6>
+                    <p></p>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <label>Rua</label><br>
+                            {{ form.rua }}
+                        </div>
+                        <div class="col-md-2">
+                            <label>Número</label><br>
+                            {{ form.numero }}
+                        </div>
+                        <div class="col-md-3">
+                            <label>Bairro</label><br>
+                            {{ form.bairro }}
+                        </div>
+                    </div>
+                    <p></p>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label>Cidade</label><br>
+                            {{ form.cidade }}
+                        </div>
+                        <div class="col-md-2">
+                            <label>Estado</label><br>
+                            {{ form.estado }}
+                        </div>
+                    </div>
+                    <p></p>
+                    <div class="row">
+                        <div class="col-12" style="text-align: right;">
+                            <button type="submit" class="btn btn-success">Salvar</button>
+                        </div>
+                    </div>
+                    <p></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content-main %}
+{% block extraJS %}
+<script>
+    $('#cnpj').mask('00.000.000/0000-00');
+    $('#telefone').mask('(00) 0 0000-0000');
+</script>
+{% endblock extraJS %}

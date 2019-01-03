@@ -59,7 +59,7 @@ class Cliente(models.Model):
 class Fornecedor(models.Model):
     razao_social = models.CharField('Razão Social', max_length=90)
     nome_fantasia = models.CharField('Razão Social', max_length=90)
-    cnpj = models.CharField('CNPJ',max_length=16)
+    cnpj = models.CharField('CNPJ',max_length=18)
     rua = models.CharField('Rua', max_length=120, blank=True, null=True)
     numero = models.IntegerField('Número')
     bairro = models.CharField('Bairro', max_length=80, blank=True, null=True)
@@ -93,7 +93,7 @@ class Produto(models.Model):
 
 
 
-class Entrada(models.Model):
+class Estoque(models.Model):
 
     data_entrada = models.DateField('Data')
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
@@ -123,11 +123,3 @@ class Venda(models.Model):
     def __str__(self):
         return self.data_venda
 
-
-class Estoque(models.Model):
-
-    produtos = models.ManyToManyField(Entrada)
-    quantidade = models.IntegerField('Quantidade Total')
-
-    def __str__(self):
-        return self.quantidade
