@@ -168,6 +168,9 @@ class EstoqueList(ListView):
     template_name = 'core/estoque_list.html'
     paginate_by = 100
 
+    def get_queryset(self):
+        return Estoque.objects.select_related('produto').select_related('fornecedor').all().order_by('id')
+
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
         context['tela'] = 'ESTOQUE'
