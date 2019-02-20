@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block content-main %}
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content"></div>
+  </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <div class="card shadow">
+            <div class="card-header border-0">
+                <div class="row">
+                    <div class="col-2">
+                        <i class="ni ni-single-02 text-primary"></i>
+                    </div>
+                    <div class="col-10" style="text-align:right;">
+                        <button class="produto-create btn btn-primary" data-id="{% url 'produto_create' %}">Cadastrar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush">
+                    <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Produto</th>
+                        <th scope="col">Peso</th>
+                        <th scope="col">Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tabela">
+                    {% for i in object_list %}
+                    <tr>
+                        <th scope="row">{{ i.id }}</th>
+                        <th scope="row">{{ i.nome_produto }}</th>
+                        <th scope="row">{{ i.peso }} g</th>
+                        <th scope="row">
+
+                            <button class="produto-update btn btn-sm btn-warning" data-id="{% url 'produto_edit' i.id %}">Editar</button>
+
+
+                            <button class="produto-delete btn btn-sm btn-danger" data-id="{% url 'produto_delete' i.pk %}">Excluir</button>
+
+                        </th>
+                    </tr>
+
+
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content-main %}
+{% block extraJS %}
+<script>
+    $(".produto-create").each(function () {
+      $(this).modalForm({formURL: $(this).data('id')});
+    });
+    $(".produto-update").each(function () {
+      $(this).modalForm({formURL: $(this).data('id')});
+    });
+     $(".produto-delete").each(function () {
+      $(this).modalForm({formURL: $(this).data('id')});
+    });
+
+</script>
+<script>
+    $(document).ready(function () {
+        $("#filtro").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#tabela tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>
+{% endblock extraJS %}

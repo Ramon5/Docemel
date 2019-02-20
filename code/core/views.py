@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from core.models import Cliente, Produto, Fornecedor, Venda,Estoque
 from core.forms import *
 from django.views.generic.edit import UpdateView, DeleteView, CreateView
+from django.views.generic import DetailView
 from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 from bootstrap_modal_forms.mixins import PassRequestMixin, DeleteAjaxMixin, CreateUpdateAjaxMixin
@@ -47,6 +48,7 @@ class LoginView(TemplateView):
 class RegisterView(TemplateView):
 
     template_name = 'register.html'
+
 
 
 ## Cliente
