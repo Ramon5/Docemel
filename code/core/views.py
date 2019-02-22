@@ -10,6 +10,7 @@ from django.views.generic import DetailView
 from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 from bootstrap_modal_forms.mixins import PassRequestMixin, DeleteAjaxMixin, CreateUpdateAjaxMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 def do_login(request):
     if request.method == 'POST':
@@ -27,7 +28,7 @@ def do_logout(request):
     return redirect('login')
 
 
-class HomeView(TemplateView):
+class HomeView(LoginRequiredMixin,TemplateView):
 
     template_name = 'core/home.html'
 
@@ -53,7 +54,7 @@ class RegisterView(TemplateView):
 
 ## Cliente
 
-class ClienteListView(ListView):
+class ClienteListView(LoginRequiredMixin,ListView):
 
     template_name = 'core/clientes.html'
     model = Cliente
@@ -80,7 +81,7 @@ class ClienteListView(ListView):
         return render(request, 'core/clientes.html', context)
 
 
-class ClienteCreate(CreateView, SuccessMessageMixin):
+class ClienteCreate(LoginRequiredMixin,CreateView, SuccessMessageMixin):
 
     model = Cliente
     template_name_suffix = '_create_form'
@@ -94,7 +95,7 @@ class ClienteCreate(CreateView, SuccessMessageMixin):
         return context
 
 
-class ClienteEdit(UpdateView, SuccessMessageMixin):
+class ClienteEdit(LoginRequiredMixin,UpdateView, SuccessMessageMixin):
 
     model = Cliente
     template_name_suffix = '_update_form'
@@ -108,7 +109,7 @@ class ClienteEdit(UpdateView, SuccessMessageMixin):
         return context
 
 
-class ClienteDelete(DeleteAjaxMixin, SuccessMessageMixin, DeleteView):
+class ClienteDelete(LoginRequiredMixin,DeleteAjaxMixin, SuccessMessageMixin, DeleteView):
 
     model = Cliente
     template_name_suffix = '_check_delete'
@@ -118,7 +119,7 @@ class ClienteDelete(DeleteAjaxMixin, SuccessMessageMixin, DeleteView):
 
 ## Produtos
 
-class ProdutoList(ListView):
+class ProdutoList(LoginRequiredMixin,ListView):
 
     model = Produto
     template_name = 'core/produtos.html'
@@ -133,7 +134,7 @@ class ProdutoList(ListView):
         return context
 
 
-class ProdutoNovo(CreateView, PassRequestMixin,SuccessMessageMixin):
+class ProdutoNovo(LoginRequiredMixin,CreateView, PassRequestMixin,SuccessMessageMixin):
 
     model = Produto
     template_name = 'core/produto_novo.html'
@@ -142,7 +143,7 @@ class ProdutoNovo(CreateView, PassRequestMixin,SuccessMessageMixin):
     form_class = ProdutoForm
 
 
-class ProdutoEdit(UpdateView, PassRequestMixin, SuccessMessageMixin):
+class ProdutoEdit(LoginRequiredMixin,UpdateView, PassRequestMixin, SuccessMessageMixin):
 
     model = Produto
     template_name = 'core/produto_update_form.html'
@@ -155,7 +156,7 @@ class ProdutoEdit(UpdateView, PassRequestMixin, SuccessMessageMixin):
         context['tela'] = 'EDIÇÃO DE PRODUTO'
         return context
 
-class ProdutoDelete(DeleteAjaxMixin, SuccessMessageMixin, DeleteView):
+class ProdutoDelete(LoginRequiredMixin,DeleteAjaxMixin, SuccessMessageMixin, DeleteView):
 
     model = Produto
     template_name_suffix = '_check_delete'
@@ -164,7 +165,7 @@ class ProdutoDelete(DeleteAjaxMixin, SuccessMessageMixin, DeleteView):
 
 
 ## Estoque
-class EstoqueList(ListView):
+class EstoqueList(LoginRequiredMixin,ListView):
 
     model = Estoque
     template_name = 'core/estoque_list.html'
@@ -179,7 +180,7 @@ class EstoqueList(ListView):
         return context
 
 
-class EstoqueNovo(CreateView, PassRequestMixin,SuccessMessageMixin):
+class EstoqueNovo(LoginRequiredMixin,CreateView, PassRequestMixin,SuccessMessageMixin):
 
     model = Produto
     template_name = 'core/entrada_estoque.html'
@@ -190,7 +191,7 @@ class EstoqueNovo(CreateView, PassRequestMixin,SuccessMessageMixin):
 
 ## Fornecedor
 
-class FornecedorList(ListView):
+class FornecedorList(LoginRequiredMixin,ListView):
 
     model = Fornecedor
     template_name = 'core/fornecedor_list.html'
@@ -201,7 +202,7 @@ class FornecedorList(ListView):
         context['tela'] = 'FORNECEDORES'
         return context
 
-class FornecedorCreate(CreateView, SuccessMessageMixin):
+class FornecedorCreate(LoginRequiredMixin,CreateView, SuccessMessageMixin):
 
     model = Fornecedor
     template_name_suffix = '_create_form'
@@ -215,7 +216,7 @@ class FornecedorCreate(CreateView, SuccessMessageMixin):
         return context
 
 
-class FornecedorEdit(UpdateView, SuccessMessageMixin):
+class FornecedorEdit(LoginRequiredMixin,UpdateView, SuccessMessageMixin):
 
     model = Fornecedor
     template_name_suffix = '_update_form'
@@ -229,7 +230,7 @@ class FornecedorEdit(UpdateView, SuccessMessageMixin):
         return context
 
 
-class FornecedorDelete(DeleteAjaxMixin, SuccessMessageMixin, DeleteView):
+class FornecedorDelete(LoginRequiredMixin,DeleteAjaxMixin, SuccessMessageMixin, DeleteView):
 
     model = Fornecedor
     template_name_suffix = '_check_delete'

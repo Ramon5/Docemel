@@ -132,3 +132,10 @@ STATICFILES_DIRS = [
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = 'media'
+
+
+EMAIL_HOST='smtp.gmail.com'
+EMAIL_HOST_USER = 'ramon.srodrigues01@gmail.com'
+EMAIL_HOST_PASSWORD = 'Gentoo@#rootfs01'
+EMAIL_PORT=587
+EMAIL_USE_TLS = True
