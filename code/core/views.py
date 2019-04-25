@@ -1,31 +1,23 @@
 from django.shortcuts import render, redirect
 from django.views.generic.base import TemplateView, View
 from django.views.generic.list import ListView
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import REDIRECT_FIELD_NAME, login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from core.models import Cliente, Produto, Fornecedor, Venda,Estoque
 from core.forms import *
 from django.views.generic.edit import UpdateView, DeleteView, CreateView
-from django.views.generic import DetailView
+from django.views.generic import DetailView,FormView,RedirectView
 from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
+from extras.mixins import DangerMessageMixin,WarningMessageMixin,InfoMessageMixin
 from bootstrap_modal_forms.mixins import PassRequestMixin, DeleteAjaxMixin, CreateUpdateAjaxMixin
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.forms import AuthenticationForm
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.debug import sensitive_post_parameters
 
-def do_login(request):
-    if request.method == 'POST':
-        usuario = request.POST.get('username')
-        senha = request.POST.get('password')
-        user = authenticate(username=usuario, password=senha)
-        if user is not None:
-            login(request,user)
-            return redirect('home')
-    return render(request,'login.html')
-
-@login_required
-def do_logout(request):
-    logout(request)
-    return redirect('login')
 
 
 class HomeView(LoginRequiredMixin,TemplateView):
@@ -42,9 +34,34 @@ class HomeView(LoginRequiredMixin,TemplateView):
 
         return render(request,'core/home.html',context)
 
-class LoginView(TemplateView):
 
-    template_name = 'login.html'
+class LoginView(FormView):
+    form_class = AuthenticationForm
+    template_name = "login.html"
+    success_url =  reverse_lazy("home")
+
+    @method_decorator(sensitive_post_parameters('password'))
+    @method_decorator(csrf_protect)
+    @method_decorator(never_cache)
+    def dispatch(self, request, *args, **kwargs):
+        request.session.set_test_cookie()
+
+        return super(LoginView, self).dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        auth_login(self.request, form.get_user())
+        return super(LoginView, self).form_valid(form)
+
+
+
+class LogoutView(LoginRequiredMixin,RedirectView):
+
+    url = '/login/'
+
+    def get(self, request, *args, **kwargs):
+        auth_logout(request)
+        return super(LogoutView, self).get(request, *args, **kwargs)
+
 
 class RegisterView(TemplateView):
 
@@ -109,12 +126,12 @@ class ClienteEdit(LoginRequiredMixin,UpdateView, SuccessMessageMixin):
         return context
 
 
-class ClienteDelete(LoginRequiredMixin,DeleteAjaxMixin, SuccessMessageMixin, DeleteView):
+class ClienteDelete(LoginRequiredMixin,DeleteAjaxMixin, DangerMessageMixin, DeleteView):
 
     model = Cliente
     template_name_suffix = '_check_delete'
     success_url = reverse_lazy('clientes')
-    success_message = 'Cliente excluido com sucesso!'
+    danger_message = 'Cliente excluido com sucesso!'
 
 
 ## Produtos
@@ -156,12 +173,12 @@ class ProdutoEdit(LoginRequiredMixin,UpdateView, PassRequestMixin, SuccessMessag
         context['tela'] = 'EDIÇÃO DE PRODUTO'
         return context
 
-class ProdutoDelete(LoginRequiredMixin,DeleteAjaxMixin, SuccessMessageMixin, DeleteView):
+class ProdutoDelete(LoginRequiredMixin,DeleteAjaxMixin, DangerMessageMixin, DeleteView):
 
     model = Produto
     template_name_suffix = '_check_delete'
     success_url = reverse_lazy('produtos')
-    success_message = 'Produto excluido com sucesso!'
+    danger_message = 'Produto excluido com sucesso!'
 
 
 ## Estoque
@@ -230,9 +247,19 @@ class FornecedorEdit(LoginRequiredMixin,UpdateView, SuccessMessageMixin):
         return context
 
 
-class FornecedorDelete(LoginRequiredMixin,DeleteAjaxMixin, SuccessMessageMixin, DeleteView):
+class FornecedorDelete(LoginRequiredMixin,DeleteAjaxMixin, DangerMessageMixin, DeleteView):
 
     model = Fornecedor
     template_name_suffix = '_check_delete'
     success_url = reverse_lazy('fornecedores')
-    success_message = 'Fornecedor excluido com sucesso!'
+    danger_message = 'Fornecedor excluido com sucesso!'
+
+# Profile
+class ProfileView(LoginRequiredMixin,TemplateView):
+
+    template_name = 'profile.html'
+
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tela'] = 'MEUS DADOS'
+        return context
