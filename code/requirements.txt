@@ -31,7 +31,7 @@ mccabe==0.6.1
 odfpy==1.4.0
 openpyxl==2.5.12
 packaging==19.0
-Pillow==6.0.0
+Pillow==6.2.0
 pkg-resources==0.0.0
 psycopg2-binary==2.7.6.1
 pycparser==2.19
